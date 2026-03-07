@@ -10,10 +10,10 @@ import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import { createClient } from '@supabase/supabase-js';
-import { convertirPrecio } from './services/currency.js';
-import { calcularRelevancia } from './services/relevancia.js';
-import { analizarConIA } from './services/ia_verifier.js';
-import { logger } from './utils/logger.js';
+import { convertirPrecio } from './currency.js';
+import { calcularRelevancia } from './relevancia.js';
+import { analizarConIA } from './ia_verifier.js';
+import { logger } from './logger.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -327,7 +327,7 @@ app.patch('/admin/eventos/:id/rechazar', requireAdminKey, async (req, res) => {
 // Ejecuta manualmente el ciclo de scraping
 app.post('/admin/scrapers/ejecutar', requireAdminKey, async (req, res) => {
   try {
-    const { ejecutarScraper } = await import('./services/scraper.js');
+    const { ejecutarScraper } = await import('./scraper.js');
     res.json({ ok: true, mensaje: 'Scraper iniciado en segundo plano.' });
     ejecutarScraper(supabaseAdmin).catch(err => logger.error('Error scraper manual:', err));
   } catch (err) {
