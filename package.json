@@ -1,0 +1,22 @@
+{
+  "name": "eventoscerca-api",
+  "version": "1.0.0",
+  "description": "Backend API para eventosCerca — eventos locales sin registro",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start":   "node server.js",
+    "dev":     "node --watch server.js",
+    "db:push": "echo 'Ejecutar schema.sql en Supabase SQL Editor'"
+  },
+  "engines": { "node": ">=18.0.0" },
+  "dependencies": {
+    "@anthropic-ai/sdk":   "^0.24.0",
+    "@supabase/supabase-js": "^2.43.0",
+    "cheerio":             "^1.0.0",
+    "cors":                "^2.8.5",
+    "express":             "^4.19.0",
+    "express-rate-limit":  "^7.3.0",
+    "helmet":              "^7.1.0"
+  }
+}
