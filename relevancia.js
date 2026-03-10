@@ -4,7 +4,7 @@
 // Pesos: shares 40%, comentarios 25%, likes 20%, medios 15%
 // ============================================================
 
-import { logger } from '../utils/logger.js';
+import { logger } from './logger.js';
 
 // Umbrales para normalizar a 0-100 por tipo de evento
 const UMBRALES = {

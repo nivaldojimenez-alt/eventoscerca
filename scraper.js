@@ -6,7 +6,7 @@
 
 import * as cheerio from 'cheerio';
 import { analizarConIA } from './ia_verifier.js';
-import { logger } from '../utils/logger.js';
+import { logger } from './logger.js';
 import crypto from 'crypto';
 
 // ── Configuración de fuentes ──────────────────────────────────
