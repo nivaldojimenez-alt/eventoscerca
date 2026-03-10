@@ -3,7 +3,7 @@
 // Caché local de 1 hora. Fuente: ExchangeRate-API (plan free)
 // ============================================================
 
-import { logger } from '../utils/logger.js';
+import { logger } from './logger.js';
 
 let cacheMoneda = {};        // { "USD_PEN": { tasa, ts } }
 const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hora
