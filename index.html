@@ -434,11 +434,11 @@ cerca de ti</div>
 // ============================================================
 // CONFIGURACIÓN — cambiar API_URL cuando el backend esté activo
 // ============================================================
-const API_URL = window.EVENTOSCERCA_API_URL || 'https://laudable-dream-production.up.railway.app'; // 'https://tu-api.railway.app'
-const https://laudable-dream-production.up.railway.app_MODE = API_URL === 'https://laudable-dream-production.up.railway.app';
+const API_URL = 'https://laudable-dream-production.up.railway.app'; // 'https://tu-api.railway.app'
+const DEMO_MODE = API_URL === 'DEMO';
 
 // Datos de demostración (activos mientras no hay backend real)
-const https://laudable-dream-production.up.railway.app_EVENTS = [
+const DEMO_EVENTS = [
   {id:'1', titulo:"Concierto de Jazz en el Parque", tipo:"cultural", fecha_inicio: new Date().toISOString(), lugar_nombre:"Parque Central", distancia_km:0.4, fuente_nombre:"Casa de la Cultura Núcleo Loja", es_gratuito:true, descripcion:"Presentación de la Orquesta Municipal de Jazz. Lleva tu silla o manta.", _pin:{top:"35%",left:"55%"}},
   {id:'2', titulo:"Torneo de Ajedrez Abierto", tipo:"academico", fecha_inicio: new Date().toISOString(), lugar_nombre:"Biblioteca Municipal", distancia_km:0.8, fuente_nombre:"Biblioteca Municipal de Loja", es_gratuito:true, descripcion:"Competencia abierta para todas las edades. Sin inscripción previa.", _pin:{top:"48%",left:"38%"}},
   {id:'3', titulo:"Festival de Danza Contemporánea", tipo:"cultural", fecha_inicio: new Date(Date.now()+86400000).toISOString(), lugar_nombre:"Teatro Universitario UNL", distancia_km:1.2, fuente_nombre:"Universidad Nacional de Loja", es_gratuito:true, descripcion:"Cuatro compañías locales presentan sus obras. Aforo limitado.", _pin:{top:"28%",left:"44%"}},
@@ -478,10 +478,10 @@ const typeLabels = {
 async function cargarEventos(tipoFiltro = null) {
   mostrarCargando();
 
-  if (https://laudable-dream-production.up.railway.app_MODE) {
+  if (DEMO_MODE) {
     // Simular latencia de red
     await new Promise(r => setTimeout(r, 600));
-    let lista = https://laudable-dream-production.up.railway.app_EVENTS;
+    let lista = DEMO_EVENTS;
     if (tipoFiltro) lista = lista.filter(e => e.tipo === tipoFiltro);
     if (currentRadius === 1) lista = lista.filter(e => e.distancia_km <= 1);
     todosLosEventos = lista;
@@ -517,15 +517,15 @@ async function cargarEventos(tipoFiltro = null) {
   } catch (err) {
     console.error('Error cargando eventos:', err);
     mostrarError('No se pudo conectar con el servidor. Mostrando datos de ejemplo.');
-    todosLosEventos = https://laudable-dream-production.up.railway.app_EVENTS;
-    renderEvents(https://laudable-dream-production.up.railway.app_EVENTS);
-    renderPins(https://laudable-dream-production.up.railway.app_EVENTS);
+    todosLosEventos = DEMO_EVENTS;
+    renderEvents(DEMO_EVENTS);
+    renderPins(DEMO_EVENTS);
   }
 }
 
 // ── API: cargar bibliotecas ───────────────────────────────────
 async function cargarBibliotecas() {
-  if (https://laudable-dream-production.up.railway.app_MODE) return; // En demo, el HTML ya tiene las bibliotecas
+  if (DEMO_MODE) return; // En demo, el HTML ya tiene las bibliotecas
 
   try {
     const params = new URLSearchParams({ lat: userLat, lon: userLon });
@@ -538,7 +538,7 @@ async function cargarBibliotecas() {
 
 // ── API: enviar sugerencia ────────────────────────────────────
 async function enviarSugerencia(formData) {
-  if (https://laudable-dream-production.up.railway.app_MODE) {
+  if (DEMO_MODE) {
     showToast('✉️ (Demo) Sugerencia recibida. En producción se envía al servidor.');
     return true;
   }
@@ -817,7 +817,7 @@ style.textContent = `@keyframes spin { to { transform: rotate(360deg); } }`;
 document.head.appendChild(style);
 
 // ── Indicador modo demo ───────────────────────────────────────
-if (https://laudable-dream-production.up.railway.app_MODE) {
+if (DEMO_MODE) {
   const badge = document.createElement('div');
   badge.style.cssText = 'position:fixed;bottom:1rem;left:1rem;background:#1e293b;color:#94a3b8;font-size:.7rem;padding:5px 11px;border-radius:8px;border:1px solid #334155;z-index:999;font-family:monospace';
   badge.textContent = '⚡ Modo demo — conectar API en producción';
