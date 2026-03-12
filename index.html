@@ -132,7 +132,7 @@
 
   /* MAIN LAYOUT */
   .main-content { padding:0 clamp(1rem,5vw,3rem) 4rem; max-width:1100px; margin:0 auto; display:grid; grid-template-columns:1fr 360px; gap:1.5rem; }
-  @media(max-width:768px) { .main-content{grid-template-columns:1fr;} .map-panel{order:-1;} .hero{grid-template-columns:1fr;} .hero-stat{text-align:left;} }
+  @media(max-width:768px) { .main-content{grid-template-columns:1fr; display:flex; flex-direction:column;} .map-panel{order:0; height:260px; position:relative; top:auto; flex-shrink:0;} .event-list-section{order:1;} .hero{grid-template-columns:1fr;} .hero-stat{text-align:left;} }
 
   /* MAP */
   .map-panel { position:sticky; top:130px; height:500px; border-radius:18px; overflow:hidden; border:1.5px solid var(--border); }
@@ -280,7 +280,7 @@ cerca de ti</div>
   </div>
 </div>
 
-<div class="main-content">
+<div class="main-content"><div class="event-list-section">
   <div>
 
     <!-- EVENTS VIEW -->
@@ -413,7 +413,7 @@ cerca de ti</div>
   </div>
 
   <!-- MAP -->
-  <div class="map-panel">
+  </div><div class="map-panel">
     <div class="map-mock">
       <div class="radius-circle"></div>
       <div class="map-you"></div>
