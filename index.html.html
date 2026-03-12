@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EventosCerca — Lo que pasa a tu lado</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e0e0e;
+    --paper: #f5f2eb;
+    --accent: #e8400c;
+    --accent2: #2563c4;
+    --muted: #8a8070;
+    --card: #ffffff;
+    --border: #ddd8cc;
+    --tag-culture: #f0e6ff;
+    --tag-culture-text: #6d28d9;
+    --tag-sport: #e0f2fe;
+    --tag-sport-text: #0369a1;
+    --tag-academic: #dcfce7;
+    --tag-academic-text: #166534;
+    --tag-books: #fff3e0;
+    --tag-books-text: #92400e;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  header {
+    padding: 0 clamp(1rem, 5vw, 3rem);
+    height: 64px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1.5px solid var(--border);
+    background: var(--paper);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.25rem; letter-spacing: -0.03em; }
+  .logo span { color: var(--accent); }
+  .privacy-badge {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 0.75rem; color: var(--muted); font-weight: 500;
+    background: #f0ece4; border: 1px solid var(--border);
+    border-radius: 20px; padding: 5px 12px;
+  }
+  .privacy-badge::before { content: '🔒'; font-size: 0.7rem; }
+
+  /* NAV TABS */
+  .nav-tabs {
+    padding: 0 clamp(1rem, 5vw, 3rem);
+    border-bottom: 1.5px solid var(--border);
+    background: var(--paper);
+    display: flex; gap: 0;
+    overflow-x: auto; scrollbar-width: none;
+    position: sticky; top: 64px; z-index: 99;
+  }
+  .nav-tabs::-webkit-scrollbar { display: none; }
+  .nav-tab {
+    padding: 13px 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem; font-weight: 500;
+    color: var(--muted); background: transparent;
+    border: none; border-bottom: 2.5px solid transparent;
+    cursor: pointer; white-space: nowrap;
+    transition: all 0.18s;
+    display: flex; align-items: center; gap: 7px;
+    margin-bottom: -1.5px;
+  }
+  .nav-tab:hover { color: var(--ink); }
+  .nav-tab.active { color: var(--ink); border-bottom-color: var(--accent); font-weight: 600; }
+  .nav-tab.books-tab.active { border-bottom-color: var(--tag-books-text); color: var(--tag-books-text); }
+
+  /* HERO */
+  .hero {
+    padding: clamp(2rem,5vw,4rem) clamp(1rem,5vw,3rem) clamp(1.5rem,3vw,2rem);
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr auto;
+    gap: 2rem; align-items: end;
+  }
+  .hero-eyebrow { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.8rem; }
+  .hero h1 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(2.2rem,5vw,4rem); line-height: 1; letter-spacing: -0.04em; }
+  .hero h1 em { font-style: normal; color: var(--accent); }
+  .hero-sub { margin-top: 1rem; font-size: 0.95rem; color: var(--muted); font-weight: 300; max-width: 480px; line-height: 1.6; }
+  .source-badge {
+    margin-top: 0.9rem;
+    display: inline-flex; align-items: flex-start; gap: 8px;
+    background: #eff6ff; border: 1px solid #bfdbfe;
+    border-radius: 10px; padding: 7px 14px;
+    font-size: 0.73rem; color: #1e40af; font-weight: 500; line-height: 1.5;
+  }
+  .source-badge::before { content: '🏛️'; font-size: 0.85rem; flex-shrink:0; }
+  .hero-stat { text-align: right; }
+  .hero-stat .big { font-family: 'Syne', sans-serif; font-size: clamp(2.5rem,6vw,4.5rem); font-weight: 800; color: var(--accent); line-height: 1; }
+  .hero-stat .label { font-size: 0.72rem; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.08em; white-space: pre-line; }
+
+  /* LOCATION BAR */
+  .location-section { padding: 0 clamp(1rem,5vw,3rem) 1.5rem; max-width: 1100px; margin: 0 auto; }
+  .location-bar {
+    background: var(--card); border: 1.5px solid var(--border); border-radius: 16px;
+    padding: 1.1rem 1.4rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+  }
+  .location-input-wrap { flex:1; min-width: 200px; display: flex; align-items: center; gap: 10px; }
+  .location-icon { width:34px; height:34px; background:var(--accent); border-radius:9px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:.9rem; }
+  .location-input-wrap input { border:none; background:transparent; font-family:'DM Sans',sans-serif; font-size:.95rem; color:var(--ink); outline:none; width:100%; }
+  .location-input-wrap input::placeholder { color:var(--muted); }
+  .radius-selector { display:flex; align-items:center; gap:8px; border-left:1.5px solid var(--border); padding-left:1rem; }
+  .radius-label { font-size:.78rem; color:var(--muted); white-space:nowrap; }
+  .radius-pills { display:flex; gap:4px; }
+  .radius-pill { padding:4px 11px; border-radius:20px; border:1.5px solid var(--border); background:transparent; font-family:'DM Sans',sans-serif; font-size:.78rem; cursor:pointer; transition:all .15s; color:var(--muted); }
+  .radius-pill.active { background:var(--ink); border-color:var(--ink); color:white; }
+  .locate-btn { background:var(--accent); color:white; border:none; border-radius:11px; padding:9px 18px; font-family:'DM Sans',sans-serif; font-size:.88rem; font-weight:500; cursor:pointer; display:flex; align-items:center; gap:7px; transition:transform .15s,background .15s; white-space:nowrap; }
+  .locate-btn:hover { background:#c93309; transform:translateY(-1px); }
+
+  /* FILTERS */
+  .filters-section { padding:0 clamp(1rem,5vw,3rem) 1.5rem; max-width:1100px; margin:0 auto; display:flex; align-items:center; gap:1rem; flex-wrap:wrap; }
+  .filter-label { font-size:.72rem; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); font-weight:500; }
+  .filter-chips { display:flex; gap:7px; flex-wrap:wrap; }
+  .chip { padding:5px 13px; border-radius:20px; border:1.5px solid var(--border); background:white; font-family:'DM Sans',sans-serif; font-size:.8rem; cursor:pointer; transition:all .15s; color:var(--ink); font-weight:500; }
+  .chip:hover { border-color:var(--ink); }
+  .chip.active          { background:var(--ink);               border-color:var(--ink); color:white; }
+  .chip.culture.active  { background:var(--tag-culture-text);  border-color:var(--tag-culture-text); color:white; }
+  .chip.sport.active    { background:var(--tag-sport-text);    border-color:var(--tag-sport-text); color:white; }
+  .chip.academic.active { background:var(--tag-academic-text); border-color:var(--tag-academic-text); color:white; }
+  .chip.books.active    { background:var(--tag-books-text);    border-color:var(--tag-books-text); color:white; }
+
+  /* MAIN LAYOUT */
+  .main-content { padding:0 clamp(1rem,5vw,3rem) 4rem; max-width:1100px; margin:0 auto; display:grid; grid-template-columns:1fr 360px; gap:1.5rem; }
+  @media(max-width:768px) { .main-content{grid-template-columns:1fr;} .map-panel{order:-1;} .hero{grid-template-columns:1fr;} .hero-stat{text-align:left;} }
+
+  /* MAP */
+  .map-panel { position:sticky; top:130px; height:500px; border-radius:18px; overflow:hidden; border:1.5px solid var(--border); }
+  .map-mock { width:100%; height:100%; position:relative; background:linear-gradient(135deg,#e8e4db,#ddd9d0 50%,#d4cfc5); overflow:hidden; }
+  .map-mock::before { content:''; position:absolute; inset:0; background-image:linear-gradient(rgba(180,170,155,.5) 1px,transparent 1px),linear-gradient(90deg,rgba(180,170,155,.5) 1px,transparent 1px); background-size:48px 48px; }
+  .map-mock::after  { content:''; position:absolute; inset:0; background-image:linear-gradient(rgba(160,150,135,.3) 2px,transparent 2px),linear-gradient(90deg,rgba(160,150,135,.3) 2px,transparent 2px); background-size:144px 144px; }
+  .radius-circle { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:230px; height:230px; border-radius:50%; border:2px dashed rgba(232,64,12,.4); background:rgba(232,64,12,.05); animation:pulse-ring 3s ease-in-out infinite; }
+  @keyframes pulse-ring { 0%,100%{transform:translate(-50%,-50%) scale(1);opacity:1} 50%{transform:translate(-50%,-50%) scale(1.04);opacity:.7} }
+  .map-you { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:14px; height:14px; background:var(--accent2); border-radius:50%; border:3px solid white; box-shadow:0 0 0 5px rgba(37,99,196,.2); z-index:5; }
+  .map-pin { position:absolute; z-index:4; cursor:pointer; display:flex; flex-direction:column; align-items:center; transition:transform .2s; }
+  .map-pin:hover { transform:scale(1.15) translateY(-2px); }
+  .pin-dot { width:30px; height:30px; border-radius:50% 50% 50% 0; transform:rotate(-45deg); display:flex; align-items:center; justify-content:center; font-size:.8rem; border:2px solid white; box-shadow:0 4px 10px rgba(0,0,0,.2); }
+  .pin-dot span { transform:rotate(45deg); }
+  .pin-label { margin-top:3px; background:white; border-radius:5px; padding:2px 6px; font-size:.62rem; font-weight:600; white-space:nowrap; box-shadow:0 2px 6px rgba(0,0,0,.12); color:var(--ink); max-width:90px; overflow:hidden; text-overflow:ellipsis; }
+  .culture-pin .pin-dot  { background:var(--tag-culture-text); }
+  .sport-pin .pin-dot    { background:var(--tag-sport-text); }
+  .academic-pin .pin-dot { background:var(--tag-academic-text); }
+  .books-pin .pin-dot    { background:var(--tag-books-text); }
+  .map-legend { position:absolute; bottom:10px; left:10px; background:white; border-radius:9px; padding:7px 11px; font-size:.67rem; color:var(--muted); border:1px solid var(--border); display:flex; gap:9px; flex-wrap:wrap; z-index:10; max-width:90%; }
+  .map-legend span { display:flex; align-items:center; gap:3px; }
+  .legend-dot { width:7px; height:7px; border-radius:50%; display:inline-block; }
+
+  /* CARDS */
+  .event-list { display:flex; flex-direction:column; gap:12px; }
+  .section-header { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:.4rem; }
+  .section-title { font-family:'Syne',sans-serif; font-size:1.05rem; font-weight:700; letter-spacing:-.02em; }
+  .section-count { font-size:.78rem; color:var(--muted); }
+
+  .event-card { background:var(--card); border:1.5px solid var(--border); border-radius:14px; padding:1rem 1.2rem; cursor:pointer; transition:all .2s; position:relative; overflow:hidden; }
+  .event-card::before { content:''; position:absolute; left:0;top:0;bottom:0; width:3px; background:var(--accent); opacity:0; transition:opacity .2s; }
+  .event-card:hover { border-color:var(--ink); transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,.07); }
+  .event-card:hover::before { opacity:1; }
+  .event-card.highlighted { border-color:var(--accent); }
+  .event-card.highlighted::before { opacity:1; }
+  .event-card.books-card::before { background:var(--tag-books-text); }
+  .event-card.books-card:hover { border-color:var(--tag-books-text); }
+  .event-card.books-card.highlighted { border-color:var(--tag-books-text); }
+
+  .card-top { display:flex; align-items:flex-start; justify-content:space-between; gap:.5rem; margin-bottom:.4rem; }
+  .card-tags { display:flex; gap:5px; flex-wrap:wrap; }
+  .tag { font-size:.65rem; font-weight:600; letter-spacing:.06em; text-transform:uppercase; padding:3px 8px; border-radius:20px; }
+  .tag-culture  { background:var(--tag-culture);  color:var(--tag-culture-text); }
+  .tag-sport    { background:var(--tag-sport);    color:var(--tag-sport-text); }
+  .tag-academic { background:var(--tag-academic); color:var(--tag-academic-text); }
+  .tag-books    { background:var(--tag-books);    color:var(--tag-books-text); }
+  .tag-free { background:#fef9c3; color:#854d0e; font-size:.63rem; font-weight:700; padding:3px 8px; border-radius:20px; letter-spacing:.04em; text-transform:uppercase; }
+  .tag-paid { background:#fee2e2; color:#991b1b; font-size:.63rem; font-weight:700; padding:3px 8px; border-radius:20px; letter-spacing:.04em; text-transform:uppercase; }
+  .source-label { font-size:.65rem; color:#1e40af; background:#eff6ff; border-radius:6px; padding:2px 7px; font-weight:500; border:1px solid #bfdbfe; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:200px; display:inline-block; }
+  .distance-badge { font-size:.7rem; color:var(--muted); font-weight:500; white-space:nowrap; padding-top:2px; }
+  .card-title { font-family:'Syne',sans-serif; font-weight:700; font-size:.95rem; letter-spacing:-.02em; line-height:1.3; margin-bottom:.25rem; }
+  .card-meta { font-size:.77rem; color:var(--muted); display:flex; gap:.8rem; flex-wrap:wrap; }
+  .card-meta span { display:flex; align-items:center; gap:4px; }
+  .card-desc { margin-top:.45rem; font-size:.8rem; color:#555; line-height:1.55; font-weight:300; }
+
+  /* BOOKS VIEW */
+  .books-section-header { display:flex; align-items:center; gap:12px; margin-bottom:1.2rem; padding-bottom:.8rem; border-bottom:2px solid var(--tag-books); }
+  .books-section-header h2 { font-family:'Syne',sans-serif; font-size:1.2rem; font-weight:800; color:var(--tag-books-text); letter-spacing:-.02em; }
+  .books-section-header p { font-size:.78rem; color:var(--muted); margin-top:2px; }
+  .books-subsection { margin-bottom:2rem; }
+  .books-subsection-title { font-family:'Syne',sans-serif; font-size:.88rem; font-weight:700; color:var(--ink); margin-bottom:.8rem; display:flex; align-items:center; gap:7px; }
+  .books-subsection-title::after { content:''; flex:1; height:1px; background:var(--border); }
+
+  .library-card { background:var(--card); border:1.5px solid var(--border); border-left:4px solid var(--tag-books-text); border-radius:14px; padding:1rem 1.2rem; margin-bottom:10px; cursor:pointer; transition:all .2s; }
+  .library-card:hover { box-shadow:0 6px 20px rgba(0,0,0,.07); transform:translateY(-1px); border-color:var(--tag-books-text); }
+  .library-name { font-family:'Syne',sans-serif; font-weight:700; font-size:.95rem; margin-bottom:4px; }
+  .library-meta { font-size:.77rem; color:var(--muted); display:flex; gap:.8rem; flex-wrap:wrap; margin-bottom:5px; }
+  .library-collections { display:flex; gap:5px; flex-wrap:wrap; margin-top:5px; }
+  .collection-tag { font-size:.67rem; font-weight:600; background:var(--tag-books); color:var(--tag-books-text); padding:2px 8px; border-radius:10px; }
+  .library-hours { font-size:.7rem; color:#166534; background:#dcfce7; padding:2px 8px; border-radius:8px; font-weight:500; display:inline-block; margin-top:5px; }
+
+  /* SUGGEST BUTTON */
+  .suggest-btn { display:flex; align-items:center; gap:8px; background:transparent; border:1.5px dashed var(--border); border-radius:14px; padding:.9rem 1.2rem; cursor:pointer; width:100%; font-family:'DM Sans',sans-serif; font-size:.85rem; color:var(--muted); transition:all .18s; margin-bottom:12px; }
+  .suggest-btn:hover { border-color:var(--accent); color:var(--accent); background:#fff8f6; }
+
+  /* ALERT BAR */
+  .alert-bar { margin-top:1rem; padding:1rem 1.2rem; background:#fff8f6; border:1.5px solid #fcd0c0; border-radius:13px; display:flex; align-items:center; justify-content:space-between; gap:1rem; }
+  .alert-bar-text strong { font-family:'Syne',sans-serif; font-size:.88rem; display:block; margin-bottom:2px; }
+  .alert-bar-text p { font-size:.72rem; color:var(--muted); }
+  .toggle-wrap { display:flex; align-items:center; gap:8px; }
+  .toggle-label { font-size:.72rem; color:var(--muted); }
+  .toggle { width:42px; height:23px; background:#e0e0e0; border-radius:12px; position:relative; cursor:pointer; transition:background .25s; border:none; flex-shrink:0; }
+  .toggle.on { background:var(--accent); }
+  .toggle::after { content:''; position:absolute; top:2.5px; left:2.5px; width:18px; height:18px; background:white; border-radius:50%; transition:transform .25s; box-shadow:0 1px 4px rgba(0,0,0,.15); }
+  .toggle.on::after { transform:translateX(19px); }
+
+  /* TOAST */
+  .toast { position:fixed; bottom:2rem; right:2rem; background:var(--ink); color:white; padding:11px 18px; border-radius:11px; font-size:.83rem; display:flex; align-items:center; gap:8px; box-shadow:0 8px 24px rgba(0,0,0,.2); transform:translateY(80px); opacity:0; transition:all .35s cubic-bezier(.16,1,.3,1); z-index:1000; }
+  .toast.show { transform:translateY(0); opacity:1; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">eventos<span>cerca</span></div>
+  <div class="privacy-badge">Sin registro · Sin datos personales</div>
+</header>
+
+<nav class="nav-tabs">
+  <button class="nav-tab active" onclick="switchTab('events',this)">🗓 Eventos</button>
+  <button class="nav-tab books-tab" onclick="switchTab('books',this)">📚 Lectura y Bibliotecas</button>
+</nav>
+
+<section class="hero">
+  <div>
+    <p class="hero-eyebrow" id="hero-eyebrow">Cultura · Deporte · Academia · Lectura</p>
+    <h1 id="hero-title">Lo que pasa<br><em>a tu lado</em></h1>
+    <p class="hero-sub" id="hero-sub">Eventos gratuitos en tu zona, ahora mismo. Sin cuenta, sin contraseña, sin huella digital.</p>
+    <div class="source-badge" id="source-badge">Fuentes: instituciones locales sin fines de lucro · Solo eventos de los próximos 3 días · Sin gobierno central</div>
+  </div>
+  <div class="hero-stat">
+    <div class="big" id="event-counter">9</div>
+    <div class="label" id="hero-count-label">eventos hoy
+cerca de ti</div>
+  </div>
+</section>
+
+<div class="location-section">
+  <div class="location-bar">
+    <div class="location-input-wrap">
+      <div class="location-icon">📍</div>
+      <input type="text" id="location-input" placeholder="Tu ubicación (ej: Plaza Mayor, Loja)">
+    </div>
+    <div class="radius-selector">
+      <span class="radius-label">Radio:</span>
+      <div class="radius-pills">
+        <button class="radius-pill" onclick="setRadius(1,this)">1 km</button>
+        <button class="radius-pill active" onclick="setRadius(3,this)">3 km</button>
+        <button class="radius-pill" onclick="setRadius(5,this)">5 km</button>
+      </div>
+    </div>
+    <button class="locate-btn" onclick="locateMe()">🎯 Usar mi ubicación</button>
+  </div>
+</div>
+
+<div class="filters-section" id="filters-section">
+  <span class="filter-label">Filtrar:</span>
+  <div class="filter-chips">
+    <button class="chip active"    onclick="toggleFilter('all',this)">Todos</button>
+    <button class="chip culture"   onclick="toggleFilter('culture',this)">🎭 Cultural</button>
+    <button class="chip sport"     onclick="toggleFilter('sport',this)">⚽ Deportivo</button>
+    <button class="chip academic"  onclick="toggleFilter('academic',this)">📖 Académico</button>
+    <button class="chip books"     onclick="toggleFilter('books',this)">📚 Lectura</button>
+    <button class="chip"           onclick="toggleFilter('today',this)">🗓 Hoy</button>
+    <button class="chip"           onclick="toggleFilter('weekend',this)">📅 Fin de semana</button>
+  </div>
+</div>
+
+<div class="main-content">
+  <div>
+
+    <!-- EVENTS VIEW -->
+    <div id="events-view">
+      <button class="suggest-btn" onclick="showToast('✉️ Formulario de sugerencia disponible en la versión final')">
+        + Sugerir un evento de mi institución
+      </button>
+      <div class="section-header">
+        <span class="section-title">Eventos cercanos</span>
+        <span class="section-count" id="results-count">9 resultados · radio 3 km</span>
+      </div>
+      <div class="event-list" id="event-list"></div>
+      <div class="alert-bar" style="margin-top:1.2rem">
+        <div class="alert-bar-text">
+          <strong>🔔 Alertas de eventos nuevos</strong>
+          <p>Aviso cuando aparezca algo nuevo en tu radio. Sin guardar tu identidad.</p>
+        </div>
+        <div class="toggle-wrap">
+          <span class="toggle-label" id="toggle-text">Desactivado</span>
+          <button class="toggle" id="alert-toggle" onclick="toggleAlert()"></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOOKS VIEW -->
+    <div id="books-view" style="display:none">
+      <div class="books-section-header">
+        <div>
+          <h2>📚 Lectura y Bibliotecas</h2>
+          <p>Directorio local · Presentaciones de libros · Clubs de lectura</p>
+        </div>
+      </div>
+
+      <div class="books-subsection">
+        <div class="books-subsection-title">🏛 Directorio de Bibliotecas</div>
+
+        <div class="library-card" onclick="showToast('📍 Ficha completa disponible en la versión final')">
+          <div class="library-name">Biblioteca Municipal de Loja</div>
+          <div class="library-meta">
+            <span>📍 0.6 km · Centro histórico</span>
+            <span>☎ 07-257-0000</span>
+          </div>
+          <div class="library-collections">
+            <span class="collection-tag">Literatura ecuatoriana</span>
+            <span class="collection-tag">Revistas científicas</span>
+            <span class="collection-tag">Hemeroteca</span>
+            <span class="collection-tag">Fondo histórico</span>
+          </div>
+          <div class="library-hours">Abierto · Lun–Vie 8:00–18:00 · Sáb 9:00–13:00</div>
+        </div>
+
+        <div class="library-card" onclick="showToast('📍 Ficha completa disponible en la versión final')">
+          <div class="library-name">Biblioteca UNL — Universidad Nacional de Loja</div>
+          <div class="library-meta">
+            <span>📍 1.4 km · Campus La Argelia</span>
+            <span>Acceso libre al público en sala</span>
+          </div>
+          <div class="library-collections">
+            <span class="collection-tag">Ciencias jurídicas</span>
+            <span class="collection-tag">Medicina</span>
+            <span class="collection-tag">Educación</span>
+            <span class="collection-tag">Tesis digitales</span>
+          </div>
+          <div class="library-hours">Abierto · Lun–Vie 7:30–19:30</div>
+        </div>
+
+        <div class="library-card" onclick="showToast('📍 Ficha completa disponible en la versión final')">
+          <div class="library-name">Biblioteca Casa de la Cultura — Núcleo Loja</div>
+          <div class="library-meta">
+            <span>📍 0.9 km · Av. 18 de Noviembre</span>
+            <span>Especializada en cultura y arte local</span>
+          </div>
+          <div class="library-collections">
+            <span class="collection-tag">Arte y cultura</span>
+            <span class="collection-tag">Poesía lojana</span>
+            <span class="collection-tag">Música</span>
+            <span class="collection-tag">Revistas culturales</span>
+          </div>
+          <div class="library-hours">Abierto · Mar–Sáb 9:00–17:00</div>
+        </div>
+      </div>
+
+      <div class="books-subsection">
+        <div class="books-subsection-title">📖 Presentaciones y Eventos Literarios</div>
+        <div id="books-events-list"></div>
+      </div>
+
+      <div class="books-subsection">
+        <div class="books-subsection-title">🤝 Clubs de Lectura y Grupos de Intercambio</div>
+
+        <div class="event-card books-card">
+          <div class="card-top">
+            <div class="card-tags"><span class="tag tag-books">Club de lectura</span><span class="tag-free">Gratis</span></div>
+            <span class="distance-badge">📍 0.8 km</span>
+          </div>
+          <div class="card-title">Club de Lectura — Narrativa Latinoamericana</div>
+          <div style="margin-bottom:4px"><span class="source-label">🏛 Casa de la Cultura Núcleo Loja</span></div>
+          <div class="card-meta">
+            <span>🗓 Cada 2do sábado</span><span>🕐 10:00</span><span>📌 Sala de lectura CCE</span>
+          </div>
+          <div class="card-desc">Lectura y discusión de autores latinoamericanos contemporáneos. Abierto a todos. Este mes: "Temporada de huracanes" de Fernanda Melchor.</div>
+        </div>
+
+        <div class="event-card books-card">
+          <div class="card-top">
+            <div class="card-tags"><span class="tag tag-books">Intercambio</span><span class="tag-free">Gratis</span></div>
+            <span class="distance-badge">📍 0.6 km</span>
+          </div>
+          <div class="card-title">Trueque de Libros Usados</div>
+          <div style="margin-bottom:4px"><span class="source-label">🏛 Biblioteca Municipal de Loja</span></div>
+          <div class="card-meta">
+            <span>🗓 Último domingo del mes</span><span>🕐 09:00–13:00</span><span>📌 Plaza Central</span>
+          </div>
+          <div class="card-desc">Trae un libro, llévate otro. Sin dinero, sin registro. Organizado por la Biblioteca Municipal.</div>
+        </div>
+      </div>
+
+      <div class="alert-bar">
+        <div class="alert-bar-text">
+          <strong>📚 Alertas de novedades literarias</strong>
+          <p>Aviso de nuevas presentaciones, eventos en bibliotecas y clubs de lectura.</p>
+        </div>
+        <div class="toggle-wrap">
+          <span class="toggle-label" id="books-toggle-text">Desactivado</span>
+          <button class="toggle" id="books-alert-toggle" onclick="toggleBooksAlert()"></button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MAP -->
+  <div class="map-panel">
+    <div class="map-mock">
+      <div class="radius-circle"></div>
+      <div class="map-you"></div>
+      <div id="map-pins"></div>
+      <div class="map-legend">
+        <span><span class="legend-dot" style="background:#6d28d9"></span>Cultural</span>
+        <span><span class="legend-dot" style="background:#0369a1"></span>Deportivo</span>
+        <span><span class="legend-dot" style="background:#166534"></span>Académico</span>
+        <span><span class="legend-dot" style="background:#92400e"></span>Lectura</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">✅ <span id="toast-msg"></span></div>
+
+<script>
+// ============================================================
+// CONFIGURACIÓN — cambiar API_URL cuando el backend esté activo
+// ============================================================
+const API_URL = window.EVENTOSCERCA_API_URL || 'DEMO'; // 'https://tu-api.railway.app'
+const DEMO_MODE = API_URL === 'DEMO';
+
+// Datos de demostración (activos mientras no hay backend real)
+const DEMO_EVENTS = [
+  {id:'1', titulo:"Concierto de Jazz en el Parque", tipo:"cultural", fecha_inicio: new Date().toISOString(), lugar_nombre:"Parque Central", distancia_km:0.4, fuente_nombre:"Casa de la Cultura Núcleo Loja", es_gratuito:true, descripcion:"Presentación de la Orquesta Municipal de Jazz. Lleva tu silla o manta.", _pin:{top:"35%",left:"55%"}},
+  {id:'2', titulo:"Torneo de Ajedrez Abierto", tipo:"academico", fecha_inicio: new Date().toISOString(), lugar_nombre:"Biblioteca Municipal", distancia_km:0.8, fuente_nombre:"Biblioteca Municipal de Loja", es_gratuito:true, descripcion:"Competencia abierta para todas las edades. Sin inscripción previa.", _pin:{top:"48%",left:"38%"}},
+  {id:'3', titulo:"Festival de Danza Contemporánea", tipo:"cultural", fecha_inicio: new Date(Date.now()+86400000).toISOString(), lugar_nombre:"Teatro Universitario UNL", distancia_km:1.2, fuente_nombre:"Universidad Nacional de Loja", es_gratuito:true, descripcion:"Cuatro compañías locales presentan sus obras. Aforo limitado.", _pin:{top:"28%",left:"44%"}},
+  {id:'4', titulo:"Partido de Fútbol — Liga Barrial", tipo:"deportivo", fecha_inicio: new Date().toISOString(), lugar_nombre:"Cancha Los Pinos", distancia_km:1.5, fuente_nombre:"Federación Deportiva de Loja", es_gratuito:true, descripcion:"Semifinal del campeonato barrial. Entrada libre.", _pin:{top:"62%",left:"58%"}},
+  {id:'5', titulo:"Charla: IA en la vida diaria", tipo:"academico", fecha_inicio: new Date(Date.now()+172800000).toISOString(), lugar_nombre:"Aula Magna UTPL", distancia_km:1.9, fuente_nombre:"UTPL Loja", es_gratuito:true, descripcion:"Conferencia abierta sobre el impacto de la IA. Certificado gratuito.", _pin:{top:"55%",left:"32%"}},
+  {id:'6', titulo:"Feria del Libro — Casa de la Cultura", tipo:"cultural", fecha_inicio: new Date(Date.now()+172800000).toISOString(), lugar_nombre:"Casa de la Cultura", distancia_km:0.9, fuente_nombre:"Casa de la Cultura Núcleo Loja", es_gratuito:true, descripcion:"Más de 40 expositores. Libros nuevos y usados. Intercambio libre.", _pin:{top:"42%",left:"65%"}},
+  {id:'7', titulo:"Maratón Urbana 5K", tipo:"deportivo", fecha_inicio: new Date(Date.now()+259200000).toISOString(), lugar_nombre:"Av. Universitaria", distancia_km:2.6, fuente_nombre:"Federación Deportiva de Loja", es_gratuito:false, precio_display:"$3.00 USD", descripcion:"Carrera popular abierta. Inscripción en línea o el mismo día.", _pin:{top:"70%",left:"45%"}},
+  {id:'8', titulo:"Taller de Fotografía Urbana", tipo:"academico", fecha_inicio: new Date(Date.now()+172800000).toISOString(), lugar_nombre:"Centro Cultural El Cisne", distancia_km:2.8, fuente_nombre:"Centro Cultural El Cisne", es_gratuito:true, descripcion:"Taller práctico de 3 horas. Solo necesitas tu smartphone.", _pin:{top:"32%",left:"28%"}},
+  {id:'9', titulo:"Presentación: 'Voces del Sur' — Poesía Lojana", tipo:"lectura", fecha_inicio: new Date().toISOString(), lugar_nombre:"Biblioteca Municipal", distancia_km:0.6, fuente_nombre:"Biblioteca Municipal de Loja", es_gratuito:true, descripcion:"Poemario colectivo de siete autores lojanos. Lectura de fragmentos y conversatorio.", _pin:{top:"44%",left:"50%"}},
+];
+
+// Pines distribuidos en el mapa para eventos de la API real
+const PIN_POSITIONS = [
+  {top:"35%",left:"55%"},{top:"48%",left:"38%"},{top:"28%",left:"44%"},
+  {top:"62%",left:"58%"},{top:"55%",left:"32%"},{top:"42%",left:"65%"},
+  {top:"70%",left:"45%"},{top:"32%",left:"28%"},{top:"44%",left:"50%"},
+  {top:"25%",left:"60%"},{top:"65%",left:"35%"},{top:"38%",left:"70%"},
+];
+
+// ── Estado global ─────────────────────────────────────────────
+let todosLosEventos = [];
+let activeFilters = ['all'];
+let alertOn = false, booksAlertOn = false;
+let currentRadius = 3;
+let userLat = -3.9931, userLon = -79.2042; // Loja, Ecuador por defecto
+let locationDetected = false;
+
+// ── Tipos y estilos ───────────────────────────────────────────
+const typeLabels = {
+  cultural:  {tag:'tag-culture',  label:'Cultural',  pinClass:'culture-pin',  emoji:'🎭'},
+  deportivo: {tag:'tag-sport',    label:'Deportivo', pinClass:'sport-pin',    emoji:'⚽'},
+  academico: {tag:'tag-academic', label:'Académico', pinClass:'academic-pin', emoji:'📖'},
+  lectura:   {tag:'tag-books',    label:'Lectura',   pinClass:'books-pin',    emoji:'📚'},
+};
+
+// ── API: cargar eventos ───────────────────────────────────────
+async function cargarEventos(tipoFiltro = null) {
+  mostrarCargando();
+
+  if (DEMO_MODE) {
+    // Simular latencia de red
+    await new Promise(r => setTimeout(r, 600));
+    let lista = DEMO_EVENTS;
+    if (tipoFiltro) lista = lista.filter(e => e.tipo === tipoFiltro);
+    if (currentRadius === 1) lista = lista.filter(e => e.distancia_km <= 1);
+    todosLosEventos = lista;
+    renderEvents(lista);
+    renderPins(lista);
+    return;
+  }
+
+  try {
+    const params = new URLSearchParams({
+      lat: userLat, lon: userLon, radio: currentRadius,
+      pais: detectarPais()
+    });
+    if (tipoFiltro) params.set('tipo', tipoFiltro);
+
+    const res = await fetch(`${API_URL}/api/eventos?${params}`, {
+      headers: { 'Accept': 'application/json' },
+      signal: AbortSignal.timeout(8000)
+    });
+
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+
+    todosLosEventos = (data.eventos || []).map((ev, i) => ({
+      ...ev,
+      _pin: PIN_POSITIONS[i % PIN_POSITIONS.length]
+    }));
+
+    renderEvents(todosLosEventos);
+    renderPins(todosLosEventos);
+    actualizarContador(data.total || todosLosEventos.length);
+
+  } catch (err) {
+    console.error('Error cargando eventos:', err);
+    mostrarError('No se pudo conectar con el servidor. Mostrando datos de ejemplo.');
+    todosLosEventos = DEMO_EVENTS;
+    renderEvents(DEMO_EVENTS);
+    renderPins(DEMO_EVENTS);
+  }
+}
+
+// ── API: cargar bibliotecas ───────────────────────────────────
+async function cargarBibliotecas() {
+  if (DEMO_MODE) return; // En demo, el HTML ya tiene las bibliotecas
+
+  try {
+    const params = new URLSearchParams({ lat: userLat, lon: userLon });
+    const res = await fetch(`${API_URL}/api/bibliotecas?${params}`);
+    if (!res.ok) return;
+    const data = await res.json();
+    if (data.bibliotecas?.length) renderBibliotecas(data.bibliotecas);
+  } catch (_) { /* silencioso — las bibliotecas demo ya están en HTML */ }
+}
+
+// ── API: enviar sugerencia ────────────────────────────────────
+async function enviarSugerencia(formData) {
+  if (DEMO_MODE) {
+    showToast('✉️ (Demo) Sugerencia recibida. En producción se envía al servidor.');
+    return true;
+  }
+  try {
+    const res = await fetch(`${API_URL}/api/sugerencias`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    });
+    const data = await res.json();
+    if (data.ok) { showToast('✅ ' + data.mensaje); return true; }
+    showToast('❌ ' + (data.error || 'Error al enviar sugerencia.'));
+    return false;
+  } catch (_) {
+    showToast('❌ Sin conexión con el servidor.');
+    return false;
+  }
+}
+
+// ── Formatear fecha ───────────────────────────────────────────
+function formatearFecha(isoStr) {
+  if (!isoStr) return '—';
+  const fecha = new Date(isoStr);
+  const ahora = new Date();
+  const mañana = new Date(ahora); mañana.setDate(ahora.getDate() + 1);
+  if (fecha.toDateString() === ahora.toDateString()) return 'Hoy';
+  if (fecha.toDateString() === mañana.toDateString()) return 'Mañana';
+  return fecha.toLocaleDateString('es-EC', { weekday:'short', day:'numeric', month:'short' });
+}
+
+function formatearHora(isoStr) {
+  if (!isoStr) return '';
+  return new Date(isoStr).toLocaleTimeString('es-EC', { hour:'2-digit', minute:'2-digit' });
+}
+
+// ── Construir tarjeta de evento ───────────────────────────────
+function buildCard(ev) {
+  const tipo = ev.tipo || 'cultural';
+  const t = typeLabels[tipo] || typeLabels.cultural;
+  const priceTag = ev.es_gratuito
+    ? `<span class="tag-free">Gratis</span>`
+    : `<span class="tag-paid">💰 ${ev.precio_local?.display || ev.precio_display || 'Ver precio'}</span>`;
+  const distancia = ev.distancia_km ? `${ev.distancia_km} km` : '';
+  const fecha = formatearFecha(ev.fecha_inicio);
+  const hora  = formatearHora(ev.fecha_inicio);
+  const fuente = ev.fuente_nombre || ev.source || '';
+
+  return `<div class="event-card ${tipo==='lectura'?'books-card':''}" id="card-${ev.id}" onclick="highlightPin('${ev.id}')">
+    <div class="card-top">
+      <div class="card-tags"><span class="tag ${t.tag}">${t.label}</span>${priceTag}</div>
+      ${distancia ? `<span class="distance-badge">📍 ${distancia}</span>` : ''}
+    </div>
+    <div class="card-title">${ev.titulo || ev.title}</div>
+    ${fuente ? `<div style="margin-bottom:4px"><span class="source-label">🏛 ${fuente}</span></div>` : ''}
+    <div class="card-meta">
+      ${fecha ? `<span>🗓 ${fecha}</span>` : ''}
+      ${hora  ? `<span>🕐 ${hora}</span>`  : ''}
+      ${ev.lugar_nombre ? `<span>📌 ${ev.lugar_nombre}</span>` : ''}
+    </div>
+    ${(ev.descripcion||ev.desc) ? `<div class="card-desc">${ev.descripcion||ev.desc}</div>` : ''}
+  </div>`;
+}
+
+// ── Render ────────────────────────────────────────────────────
+function renderEvents(lista) {
+  const c = document.getElementById('event-list');
+  actualizarContador(lista.length);
+  if (!lista.length) {
+    c.innerHTML = `<div style="text-align:center;padding:2.5rem 1rem;color:var(--muted)">
+      <div style="font-size:2rem;margin-bottom:.5rem">🔍</div>
+      <p style="font-size:.88rem">No hay eventos con estos filtros.<br>Prueba ampliar el radio o cambiar categoría.</p>
+    </div>`;
+  } else {
+    c.innerHTML = lista.map(buildCard).join('');
+  }
+  // Eventos literarios en la pestaña de libros
+  const booksEvs = todosLosEventos.filter(e => e.tipo === 'lectura');
+  const bel = document.getElementById('books-events-list');
+  if (bel) bel.innerHTML = booksEvs.length
+    ? booksEvs.map(buildCard).join('')
+    : `<p style="font-size:.82rem;color:var(--muted);padding:.5rem 0">Sin eventos literarios en este radio por ahora.</p>`;
+}
+
+function renderPins(lista) {
+  document.getElementById('map-pins').innerHTML = lista.map(ev => {
+    const tipo = ev.tipo || 'cultural';
+    const t = typeLabels[tipo] || typeLabels.cultural;
+    const pin = ev._pin || PIN_POSITIONS[Math.floor(Math.random()*PIN_POSITIONS.length)];
+    return `<div class="map-pin ${t.pinClass}" id="pin-${ev.id}"
+      style="top:${pin.top};left:${pin.left}" onclick="highlightCard('${ev.id}')">
+      <div class="pin-dot"><span>${t.emoji}</span></div>
+      <div class="pin-label">${ev.titulo||ev.title}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderBibliotecas(libs) {
+  // Reemplaza el contenido del directorio si vienen de la API
+  const container = document.querySelector('.books-subsection');
+  if (!container) return;
+  // (En producción: construir tarjetas dinámicamente desde data.bibliotecas)
+}
+
+function actualizarContador(n) {
+  document.getElementById('event-counter').textContent = n;
+  document.getElementById('results-count').textContent =
+    `${n} resultado${n!==1?'s':''} · radio ${currentRadius} km`;
+}
+
+function mostrarCargando() {
+  document.getElementById('event-list').innerHTML = `
+    <div style="text-align:center;padding:3rem 1rem;color:var(--muted)">
+      <div style="font-size:1.8rem;margin-bottom:.6rem;animation:spin 1s linear infinite;display:inline-block">⏳</div>
+      <p style="font-size:.85rem">Buscando eventos cerca de ti...</p>
+    </div>`;
+}
+
+function mostrarError(msg) {
+  showToast('⚠️ ' + msg);
+}
+
+// ── Geolocalización ───────────────────────────────────────────
+function locateMe() {
+  const input = document.getElementById('location-input');
+  input.value = 'Detectando ubicación...';
+
+  if (!navigator.geolocation) {
+    input.value = 'Loja, Ecuador (por defecto)';
+    showToast('⚠️ Tu navegador no soporta geolocalización.');
+    cargarEventos();
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      userLat = pos.coords.latitude;
+      userLon = pos.coords.longitude;
+      locationDetected = true;
+      input.value = `Ubicación detectada (${userLat.toFixed(4)}, ${userLon.toFixed(4)})`;
+      showToast('📍 Ubicación detectada — no se guarda ningún dato.');
+      cargarEventos(activeFilters.includes('all') ? null : activeFilters[0]);
+    },
+    _err => {
+      input.value = 'Loja, Ecuador (por defecto)';
+      showToast('📍 Usando ubicación de Loja por defecto.');
+      cargarEventos();
+    },
+    { timeout: 8000, maximumAge: 0 }
+  );
+}
+
+function detectarPais() {
+  // Inferencia básica sin guardar datos
+  try {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if (tz.includes('Bogota') || tz.includes('Colombia')) return 'CO';
+    if (tz.includes('Lima') || tz.includes('Peru'))       return 'PE';
+    if (tz.includes('Mexico'))                            return 'MX';
+    if (tz.includes('Sao_Paulo') || tz.includes('Brazil')) return 'BR';
+    if (tz.includes('Madrid') || tz.includes('Europe'))   return 'ES';
+  } catch(_) {}
+  return 'EC'; // Ecuador por defecto
+}
+
+// ── Filtros ───────────────────────────────────────────────────
+function getFiltered() {
+  if (activeFilters.includes('all')) return todosLosEventos;
+  return todosLosEventos.filter(ev => {
+    const tipo = ev.tipo || ev.type;
+    // Mapear tipo de API al filtro
+    const mapaFiltro = {cultural:'culture', deportivo:'sport', academico:'academic', lectura:'books'};
+    if (activeFilters.some(f => mapaFiltro[tipo] === f || tipo === f)) return true;
+    if (activeFilters.includes('today')) {
+      const hoy = new Date().toDateString();
+      if (new Date(ev.fecha_inicio).toDateString() === hoy) return true;
+    }
+    if (activeFilters.includes('weekend')) {
+      const d = new Date(ev.fecha_inicio).getDay();
+      if (d === 0 || d === 6) return true;
+    }
+    return false;
+  });
+}
+
+function toggleFilter(filter, btn) {
+  if (filter === 'all') {
+    activeFilters = ['all'];
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+  } else {
+    activeFilters = activeFilters.filter(f => f !== 'all');
+    document.querySelector('.chip:first-child').classList.remove('active');
+    if (activeFilters.includes(filter)) {
+      activeFilters = activeFilters.filter(f => f !== filter);
+      btn.classList.remove('active');
+    } else {
+      activeFilters.push(filter); btn.classList.add('active');
+    }
+    if (!activeFilters.length) {
+      activeFilters = ['all'];
+      document.querySelector('.chip:first-child').classList.add('active');
+    }
+  }
+  const f = getFiltered(); renderEvents(f); renderPins(f);
+}
+
+function setRadius(km, btn) {
+  currentRadius = km;
+  document.querySelectorAll('.radius-pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  cargarEventos(activeFilters.includes('all') ? null : activeFilters[0]);
+  showToast(`Radio actualizado a ${km} km`);
+}
+
+// ── Tabs ──────────────────────────────────────────────────────
+function switchTab(tab, btn) {
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('events-view').style.display = tab==='events'?'block':'none';
+  document.getElementById('books-view').style.display  = tab==='books' ?'block':'none';
+  document.getElementById('filters-section').style.display = tab==='events'?'flex':'none';
+  if (tab === 'books') {
+    document.getElementById('hero-title').innerHTML = 'Leer está<br><em>cerca de ti</em>';
+    document.getElementById('hero-eyebrow').textContent = 'Bibliotecas · Presentaciones · Clubs de lectura';
+    document.getElementById('hero-sub').textContent = 'Encuentra dónde leer, qué leer y con quién leer. Sin registro, sin datos.';
+    document.getElementById('hero-count-label').textContent = 'bibliotecas\ncercanas';
+    document.getElementById('source-badge').textContent = 'Fuentes: instituciones culturales locales · Colecciones verificadas · Sin gobierno central';
+    cargarBibliotecas();
+  } else {
+    document.getElementById('hero-title').innerHTML = 'Lo que pasa<br><em>a tu lado</em>';
+    document.getElementById('hero-eyebrow').textContent = 'Cultura · Deporte · Academia · Lectura';
+    document.getElementById('hero-sub').textContent = 'Eventos gratuitos en tu zona, ahora mismo. Sin cuenta, sin contraseña, sin huella digital.';
+    document.getElementById('hero-count-label').textContent = 'eventos hoy\ncerca de ti';
+    document.getElementById('source-badge').textContent = 'Fuentes: instituciones locales sin fines de lucro · Solo eventos de los próximos 3 días · Sin gobierno central';
+  }
+}
+
+// ── Interacción mapa ──────────────────────────────────────────
+function highlightPin(id) {
+  const pin = document.getElementById(`pin-${id}`);
+  if (pin) { pin.style.zIndex=10; pin.style.transform='scale(1.2) translateY(-4px)'; setTimeout(()=>pin.style.transform='',600); }
+}
+function highlightCard(id) {
+  document.querySelectorAll('.event-card').forEach(c=>c.classList.remove('highlighted'));
+  const card = document.getElementById(`card-${id}`);
+  if (card) { card.classList.add('highlighted'); card.scrollIntoView({behavior:'smooth',block:'nearest'}); }
+}
+
+// ── Alertas ───────────────────────────────────────────────────
+function toggleAlert() {
+  alertOn = !alertOn;
+  document.getElementById('alert-toggle').classList.toggle('on', alertOn);
+  document.getElementById('toggle-text').textContent = alertOn ? 'Activado' : 'Desactivado';
+  showToast(alertOn ? '🔔 Alertas activadas — sin guardar tus datos' : '🔕 Alertas desactivadas');
+}
+function toggleBooksAlert() {
+  booksAlertOn = !booksAlertOn;
+  document.getElementById('books-alert-toggle').classList.toggle('on', booksAlertOn);
+  document.getElementById('books-toggle-text').textContent = booksAlertOn ? 'Activado' : 'Desactivado';
+  showToast(booksAlertOn ? '📚 Alertas literarias activadas' : '🔕 Alertas desactivadas');
+}
+
+// ── Toast ─────────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+// ── CSS animación spin ────────────────────────────────────────
+const style = document.createElement('style');
+style.textContent = `@keyframes spin { to { transform: rotate(360deg); } }`;
+document.head.appendChild(style);
+
+// ── Indicador modo demo ───────────────────────────────────────
+if (DEMO_MODE) {
+  const badge = document.createElement('div');
+  badge.style.cssText = 'position:fixed;bottom:1rem;left:1rem;background:#1e293b;color:#94a3b8;font-size:.7rem;padding:5px 11px;border-radius:8px;border:1px solid #334155;z-index:999;font-family:monospace';
+  badge.textContent = '⚡ Modo demo — conectar API en producción';
+  document.body.appendChild(badge);
+}
+
+// ── Inicialización ────────────────────────────────────────────
+cargarEventos();
+</script>
+</body>
+</html>
