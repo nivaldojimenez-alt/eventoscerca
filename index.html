@@ -240,7 +240,7 @@
     <p class="hero-eyebrow" id="hero-eyebrow">Cultura · Deporte · Academia · Lectura</p>
     <h1 id="hero-title">Lo que pasa<br><em>a tu lado</em></h1>
     <p class="hero-sub" id="hero-sub">Eventos gratuitos en tu zona, ahora mismo. Sin cuenta, sin contraseña, sin huella digital.</p>
-    <div class="source-badge" id="source-badge">Fuentes: instituciones locales sin fines de lucro · Solo eventos de los próximos 3 días · Sin gobierno central</div>
+    <div class="source-badge" id="source-badge">Fuentes: instituciones locales sin fines de lucro · Solo eventos de los próximos 3 días</div>
   </div>
   <div class="hero-stat">
     <div class="big" id="event-counter">9</div>
@@ -765,14 +765,14 @@ function switchTab(tab, btn) {
     document.getElementById('hero-eyebrow').textContent = 'Bibliotecas · Presentaciones · Clubs de lectura';
     document.getElementById('hero-sub').textContent = 'Encuentra dónde leer, qué leer y con quién leer. Sin registro, sin datos.';
     document.getElementById('hero-count-label').textContent = 'bibliotecas\ncercanas';
-    document.getElementById('source-badge').textContent = 'Fuentes: instituciones culturales locales · Colecciones verificadas · Sin gobierno central';
+    document.getElementById('source-badge').textContent = 'Fuentes: instituciones culturales locales · Colecciones verificadas';
     cargarBibliotecas();
   } else {
     document.getElementById('hero-title').innerHTML = 'Lo que pasa<br><em>a tu lado</em>';
     document.getElementById('hero-eyebrow').textContent = 'Cultura · Deporte · Academia · Lectura';
     document.getElementById('hero-sub').textContent = 'Eventos gratuitos en tu zona, ahora mismo. Sin cuenta, sin contraseña, sin huella digital.';
     document.getElementById('hero-count-label').textContent = 'eventos hoy\ncerca de ti';
-    document.getElementById('source-badge').textContent = 'Fuentes: instituciones locales sin fines de lucro · Solo eventos de los próximos 3 días · Sin gobierno central';
+    document.getElementById('source-badge').textContent = 'Fuentes: instituciones locales sin fines de lucro · Solo eventos de los próximos 3 días';
   }
 }
 
